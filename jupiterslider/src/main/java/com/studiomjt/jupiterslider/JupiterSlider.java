@@ -32,12 +32,13 @@ public class JupiterSlider extends FrameLayout implements ViewPager.OnPageChange
     private AutoSlider autoSlider;
     private int savedPosition;
     private boolean savedWayState;
-    private int splitCount;
     ScaleAnimation animHideIndicator = new ScaleAnimation(2f, 1f, 2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
     ScaleAnimation animShowIndicator = new ScaleAnimation(0.5f, 1f, 0.5f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
     private OnChangeListener onChangeListener;
     private boolean isAutoSlide = true;
     private boolean isTwoSideForTablet;
+
+    public enum ScrollWays {Right, Left}
 
     public JupiterSlider(Context context) {
         super(context);
@@ -75,7 +76,7 @@ public class JupiterSlider extends FrameLayout implements ViewPager.OnPageChange
         this.isAutoSlide = false;
     }
 
-    public void load(int defaultSlide, boolean isTwoSideForTablet, boolean scrollWay, List<SlideModel> slideCollection, int pageTransformDuration, int pageDuration, int splitCount, OnSlideClickListener onClickListener, OnChangeListener onChangeListener) {
+    public void load(int defaultSlide, boolean isTwoSideForTablet, ScrollWays scrollWay, List<SlideModel> slideCollection, int pageTransformDuration, int pageDuration, OnSlideClickListener onClickListener, OnChangeListener onChangeListener) {
         this.onChangeListener = onChangeListener;
         this.isTwoSideForTablet = isTwoSideForTablet;
         slider.setPageDuration(pageTransformDuration);
@@ -83,9 +84,20 @@ public class JupiterSlider extends FrameLayout implements ViewPager.OnPageChange
         slider.setAdapter(sliderAdapter);
         sliderAdapter.addOnSlideListener(onClickListener);
         slider.addOnPageChangeListener(this);
-        this.splitCount = splitCount;
-        if (slider.getAdapter().getCount() > splitCount) {
-            if (!isTwoSideForTablet) {
+        if (!isTwoSideForTablet) {
+            dotCount = sliderAdapter.getCount();
+            dots = new ImageView[dotCount];
+            pageIndicator.removeAllViews();
+            for (int i = 0; i < dotCount; i++) {
+                dots[i] = new ImageView(getContext());
+                dots[i].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.indicator_unselected));
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                params.setMargins(5, 0, 5, 0);
+                pageIndicator.addView(dots[i], params);
+            }
+            dots[0].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.indicator_selected));
+        } else {
+            if (!Util.isTablet(slider.getContext())) {
                 dotCount = sliderAdapter.getCount();
                 dots = new ImageView[dotCount];
                 pageIndicator.removeAllViews();
@@ -97,26 +109,13 @@ public class JupiterSlider extends FrameLayout implements ViewPager.OnPageChange
                     pageIndicator.addView(dots[i], params);
                 }
                 dots[0].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.indicator_selected));
-            } else {
-                if (!Util.isTablet(slider.getContext())) {
-                    dotCount = sliderAdapter.getCount();
-                    dots = new ImageView[dotCount];
-                    pageIndicator.removeAllViews();
-                    for (int i = 0; i < dotCount; i++) {
-                        dots[i] = new ImageView(getContext());
-                        dots[i].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.indicator_unselected));
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                        params.setMargins(5, 0, 5, 0);
-                        pageIndicator.addView(dots[i], params);
-                    }
-                    dots[0].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.indicator_selected));
-                }
             }
-            if (isAutoSlide) {
-                autoSlider = new AutoSlider(slider);
-                autoSlider.start(pageDuration);
-                autoSlider.restoreState(defaultSlide, scrollWay);
-            }
+        }
+        if (isAutoSlide) {
+            autoSlider = new AutoSlider(slider);
+            autoSlider.start(pageDuration);
+            boolean way = scrollWay == ScrollWays.Right;
+            autoSlider.restoreState(defaultSlide, way);
         }
     }
 
@@ -184,8 +183,19 @@ public class JupiterSlider extends FrameLayout implements ViewPager.OnPageChange
             autoSlider.pageChanged(position);
             onChangeListener.onChange(position, autoSlider.getWay());
         }
-        if (slider.getAdapter().getCount() > splitCount) {
-            if (!isTwoSideForTablet) {
+        if (!isTwoSideForTablet) {
+            for (int i = 0; i < dotCount; i++) {
+                if (dots[i].getTag() == "selected") {
+                    dots[i].startAnimation(animHideIndicator);
+                }
+                dots[i].setTag(null);
+                dots[i].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.indicator_unselected));
+            }
+            dots[position].startAnimation(animShowIndicator);
+            dots[position].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.indicator_selected));
+            dots[position].setTag("selected");
+        } else {
+            if (!Util.isTablet(slider.getContext())) {
                 for (int i = 0; i < dotCount; i++) {
                     if (dots[i].getTag() == "selected") {
                         dots[i].startAnimation(animHideIndicator);
@@ -196,19 +206,6 @@ public class JupiterSlider extends FrameLayout implements ViewPager.OnPageChange
                 dots[position].startAnimation(animShowIndicator);
                 dots[position].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.indicator_selected));
                 dots[position].setTag("selected");
-            } else {
-                if (!Util.isTablet(slider.getContext())) {
-                    for (int i = 0; i < dotCount; i++) {
-                        if (dots[i].getTag() == "selected") {
-                            dots[i].startAnimation(animHideIndicator);
-                        }
-                        dots[i].setTag(null);
-                        dots[i].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.indicator_unselected));
-                    }
-                    dots[position].startAnimation(animShowIndicator);
-                    dots[position].setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.indicator_selected));
-                    dots[position].setTag("selected");
-                }
             }
         }
     }

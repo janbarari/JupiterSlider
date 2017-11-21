@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/JupiterSlider.iml" filepath="$PROJECT_DIR$/JupiterSlider.iml" />
+      <module fileurl="file://$PROJECT_DIR$/JupiterSliderExample.iml" filepath="$PROJECT_DIR$/JupiterSliderExample.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jupiterslider/jupiterslider.iml" filepath="$PROJECT_DIR$/jupiterslider/jupiterslider.iml" />
     </modules>
   </component>
 </project>
