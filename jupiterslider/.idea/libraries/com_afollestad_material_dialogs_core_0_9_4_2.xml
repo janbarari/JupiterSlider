@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="com.afollestad.material-dialogs:core-0.9.4.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/core-0.9.4.2.aar/2a9314a9aa9eb186678f9c43d0870f7b/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/core-0.9.4.2.aar/2a9314a9aa9eb186678f9c43d0870f7b/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.afollestad.material-dialogs/core/0.9.4.2/edd5556b53f0563c0c4caab0ddd6a5855b06f742/core-0.9.4.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.afollestad.material-dialogs/core/0.9.4.2/e21247396a76359b317e9d8f3c81d983486dd6fd/core-0.9.4.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
