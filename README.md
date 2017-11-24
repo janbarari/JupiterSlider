@@ -24,5 +24,15 @@ ArrayList<Slide> slides = new ArrayList<>();
 slides.add(new Slide(new ImageProvider("imageurl"), "uri", "#000000"));
 slides.add(new Slide(new ImageProvider(BITMAP), "uri", "#000000"));
 slides.add(new Slide(new ImageProvider(RESOURCEID), "uri", "#000000"));
-slider.load(2, true,JupiterSlider.ScrollWays.Left, slides, 1200, 4000, this);	
+slider.load(2, true, JupiterSlider.ScrollWays.Left, slides, 1200,4000, new JupiterSliderListener() {
+                    @Override
+                    public void onChange(int slidePosition) {
+                        
+                    }
+
+                    @Override
+                    public void onClick(int slideId, Object uri) {
+
+                    }
+                });
 ```
