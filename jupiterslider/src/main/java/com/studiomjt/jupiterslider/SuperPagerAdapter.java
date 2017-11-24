@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.studiomjt.jupiterslider.listener.OnSlideClickListener;
-import com.studiomjt.jupiterslider.model.SlideModel;
+import com.studiomjt.jupiterslider.listener.JupiterSliderListener;
+import com.studiomjt.jupiterslider.model.Slide;
+import com.studiomjt.jupiterslider.util.ImageProvider;
 import com.studiomjt.jupiterslider.util.Util;
 
 import java.util.List;
@@ -20,11 +22,11 @@ import java.util.List;
 class SuperPagerAdapter extends PagerAdapter {
 
     private Context context;
-    private List<SlideModel> slideCollection;
-    private OnSlideClickListener listener;
+    private List<Slide> slideCollection;
+    private JupiterSliderListener listener;
     private boolean isTwoSideForTablet = true;
 
-    SuperPagerAdapter(Context context, List<SlideModel> slideGroup, boolean isTwoSideForTablet) {
+    SuperPagerAdapter(Context context, List<Slide> slideGroup, boolean isTwoSideForTablet) {
         this.context = context;
         this.slideCollection = slideGroup;
         this.isTwoSideForTablet = isTwoSideForTablet;
@@ -48,17 +50,25 @@ class SuperPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        assert inflater != null;
         View itemView = inflater.inflate(R.layout.slide_child, container, false);
-        ImageView imageView = (ImageView) itemView.findViewById(R.id.slideImageView);
+        ImageView imageView = itemView.findViewById(R.id.slideImageView);
         int backColor = Color.parseColor("#fafafa");
         try {
             backColor = Color.parseColor(slideCollection.get(position).getBackColor());
         } catch (Exception ignored) {
+            Log.w(getClass().getSimpleName(), "Failed to Parse HexColor");
         }
-        Glide.with(context)
-                .load(slideCollection.get(position).getUrl())
-                .placeholder(new ColorDrawable(backColor))
-                .into(imageView);
+        if (slideCollection.get(position).getImageProvider().getType() == ImageProvider.SourceType.BITMAP) {
+            imageView.setImageBitmap(slideCollection.get(position).getImageProvider().getBitmap());
+        } else if (slideCollection.get(position).getImageProvider().getType() == ImageProvider.SourceType.ID) {
+            imageView.setImageDrawable(context.getResources().getDrawable(slideCollection.get(position).getImageProvider().getId()));
+        } else {
+            Glide.with(context)
+                    .load(slideCollection.get(position).getImageProvider().getUrl())
+                    .placeholder(new ColorDrawable(backColor))
+                    .into(imageView);
+        }
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +98,7 @@ class SuperPagerAdapter extends PagerAdapter {
         }
     }
 
-    void addOnSlideListener(OnSlideClickListener listener) {
+    void addListener(JupiterSliderListener listener) {
         this.listener = listener;
     }
 }

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.studiomjt.jupiterslider.SuperSlider
+    <com.studiomjt.jupiterslider.util.SuperSlider
         android:id="@+id/superSlider"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

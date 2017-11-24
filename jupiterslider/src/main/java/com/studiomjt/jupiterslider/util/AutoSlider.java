@@ -2,8 +2,6 @@ package com.studiomjt.jupiterslider.util;
 
 import android.os.Handler;
 
-import com.studiomjt.jupiterslider.SuperSlider;
-
 import java.util.Timer;
 import java.util.TimerTask;
 

@@ -1,5 +1,6 @@
 package com.studiomjt.jupiterslider.listener;
 
-public interface OnSlideClickListener {
+public interface JupiterSliderListener {
+    void onChange(int slidePosition);
     void onClick(int slideId, Object uri);
 }

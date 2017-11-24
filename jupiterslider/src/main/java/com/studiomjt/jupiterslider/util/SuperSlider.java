@@ -1,4 +1,4 @@
-package com.studiomjt.jupiterslider;
+package com.studiomjt.jupiterslider.util;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
@@ -35,7 +35,7 @@ public class SuperSlider extends ViewPager {
             scrollerSpeed.setDuration(pageDuration);
             scroller.set(this, scrollerSpeed);
         } catch (Exception e) {
-            throw new RuntimeException("jupiterSlider duration scroller not found!");
+            throw new RuntimeException("JupiterSlider Scroller Duration not Initialized");
         }
     }
 

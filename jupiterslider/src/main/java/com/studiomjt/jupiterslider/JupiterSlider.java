@@ -14,10 +14,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.studiomjt.jupiterslider.listener.OnChangeListener;
-import com.studiomjt.jupiterslider.listener.OnSlideClickListener;
-import com.studiomjt.jupiterslider.model.SlideModel;
+import com.studiomjt.jupiterslider.listener.JupiterSliderListener;
+import com.studiomjt.jupiterslider.model.Slide;
 import com.studiomjt.jupiterslider.util.AutoSlider;
+import com.studiomjt.jupiterslider.util.SuperSlider;
 import com.studiomjt.jupiterslider.util.Util;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public class JupiterSlider extends FrameLayout implements ViewPager.OnPageChange
     private boolean savedWayState;
     ScaleAnimation animHideIndicator = new ScaleAnimation(2f, 1f, 2f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
     ScaleAnimation animShowIndicator = new ScaleAnimation(0.5f, 1f, 0.5f, 1f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-    private OnChangeListener onChangeListener;
+    private JupiterSliderListener listener;
     private boolean isAutoSlide = true;
     private boolean isTwoSideForTablet;
 
@@ -63,26 +63,27 @@ public class JupiterSlider extends FrameLayout implements ViewPager.OnPageChange
 
     void init(Context context) {
         inflate(context, R.layout.jupiter, this);
-        slider = (SuperSlider) findViewById(R.id.superSlider);
-        pageIndicator = (LinearLayout) findViewById(R.id.pagerIndicator);
+        slider = findViewById(R.id.superSlider);
+        pageIndicator = findViewById(R.id.pagerIndicator);
         animHideIndicator.setDuration(200);
         animShowIndicator.setDuration(200);
     }
 
     /**
-     * call it before call the load method
+     * Call it before load method executed
      */
     public void disableAutoSlide() {
         this.isAutoSlide = false;
     }
 
-    public void load(int defaultSlide, boolean isTwoSideForTablet, ScrollWays scrollWay, List<SlideModel> slideCollection, int pageTransformDuration, int pageDuration, OnSlideClickListener onClickListener, OnChangeListener onChangeListener) {
-        this.onChangeListener = onChangeListener;
+    public void load(int defaultSlide, boolean isTwoSideForTablet, ScrollWays scrollWay,
+                     List<Slide> slideCollection, int pageTransformDuration, int pageDuration, JupiterSliderListener listener) {
+        this.listener = listener;
         this.isTwoSideForTablet = isTwoSideForTablet;
         slider.setPageDuration(pageTransformDuration);
         sliderAdapter = new SuperPagerAdapter(getContext(), slideCollection, isTwoSideForTablet);
         slider.setAdapter(sliderAdapter);
-        sliderAdapter.addOnSlideListener(onClickListener);
+        sliderAdapter.addListener(listener);
         slider.addOnPageChangeListener(this);
         if (!isTwoSideForTablet) {
             dotCount = sliderAdapter.getCount();
@@ -152,8 +153,7 @@ public class JupiterSlider extends FrameLayout implements ViewPager.OnPageChange
             bundle.putBoolean("way", this.savedWayState);
             return bundle;
         } else {
-            Bundle bundle = new Bundle();
-            return bundle;
+            return new Bundle();
         }
     }
 
@@ -181,7 +181,7 @@ public class JupiterSlider extends FrameLayout implements ViewPager.OnPageChange
     public void onPageSelected(int position) {
         if (autoSlider != null) {
             autoSlider.pageChanged(position);
-            onChangeListener.onChange(position, autoSlider.getWay());
+            listener.onChange(position);
         }
         if (!isTwoSideForTablet) {
             for (int i = 0; i < dotCount; i++) {
