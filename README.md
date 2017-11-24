@@ -5,6 +5,8 @@ An Awesome Auto Slider for Android Developers
 ![](https://github.com/Studiomjt/JupiterSlider/blob/master/mobile.gif)
 
 ```gradle
+maven {url "https://dl.bintray.com/mehdimjt/maven"}
+	
 dependencies {
 	// ... other dependencies here
     compile 'com.dettaa:JupiterSlider:1.0'
