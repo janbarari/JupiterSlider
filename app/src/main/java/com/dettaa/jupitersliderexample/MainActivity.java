@@ -18,6 +18,7 @@ import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity implements JupiterSliderListener {
 
+    static boolean isActive = false;
     JupiterSlider slider;
 
     @Override
@@ -53,7 +54,20 @@ public class MainActivity extends AppCompatActivity implements JupiterSliderList
 
     @Override
     public void onChange(int slidePosition) {
+        if (isActive)
         Toast.makeText(this, "slide changed, new position is: " + slidePosition, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isActive = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isActive = false;
     }
 
     @Override
