@@ -12,6 +12,12 @@ dependencies {
 ```
 
 See the Example Source Code
+```xml
+<com.studiomjt.jupiterslider.JupiterSlider
+        android:id="@+id/jupiterSlider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+```
 
 ```java
 ArrayList<Slide> slides = new ArrayList<>();
