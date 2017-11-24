@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements JupiterSliderList
         isActive = true;
     }
 
+    //this is test
     @Override
     protected void onStop() {
         super.onStop();
